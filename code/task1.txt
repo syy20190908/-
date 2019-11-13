@@ -1,0 +1,90 @@
+import numpy as np
+import pandas as pd
+NewRetail1=pd.read_csv(r'C:\python\NewRetail\附件1.csv', sep = ',',index_col=4,encoding = 'gbk')
+NewRetail2=pd.read_csv(r'C:\python\NewRetail\附件2.csv', sep = ',',index_col=0,encoding = 'gbk')
+#print('\n',NewRetaill.index)
+#print('\n',NewRetail2.index)
+NewRetail= pd.merge(NewRetail1,NewRetail2,on='商品')#拼接附件1和附件2
+#首先创造一个空csv文件，名为NewRetail
+import os
+os.getcwd()#获取当前工作文件路径
+NewRetail.to_csv(r'C:\python\NewRetail\NewRetail.csv',index=True,encoding = 'gbk') #路劲要加r转为普通字符，文件内容有中文要encoding = 'gbk',重点是index=True
+NewRetail=pd.read_csv(r'C:\python\NewRetail\NewRetail.csv', sep = ',',index_col=0,encoding = 'gbk')
+print('\n',NewRetail.head())
+#检查NewRetail数据
+#去重
+print('进行去重操作前订单详情表的形状为：',NewRetail1.shape)
+##样本去重
+NewRetail1.drop_duplicates(inplace = True)
+##特征去重
+def FeatureEquals(df):
+    ##定义求取特征是否完全相同的矩阵的函数
+    dfEquals=pd.DataFrame([],columns=df.columns,index=df.columns)
+    for i in df.columns:
+        for j in df.columns:
+            dfEquals.loc[i,j]=df.loc[:,i].equals(df.loc[:,j])
+    return dfEquals
+detEquals=FeatureEquals(NewRetail1)## 应用上述函数
+##遍历所有数据
+lenDet = detEquals.shape[0]
+dupCol = []
+for k in range(lenDet):
+    for l in range(k+1,lenDet):
+        if detEquals.iloc[k,l] & (detEquals.columns[l] not in dupCol):
+            dupCol.append(detEquals.columns[l])
+#删除重复列
+NewRetail1.drop(dupCol,axis=1,inplace=True)
+print('进行去重操作后订单详情表的形状为：',NewRetail1.shape)
+##统计各个特征的缺失率
+naRate = (NewRetail1.isnull().sum()/ NewRetail1.shape[0]*100).astype('str')+'%'
+print('detail每个特征缺失的率为：\n',naRate)
+##删除全部均为缺失的列
+NewRetail1.dropna(axis = 1,how = 'all',inplace = True)
+print('经过缺失值处理后订单详情表各特征缺失值的数目为：\n', NewRetail1.isnull().sum())
+#转换日期的数据类型
+#NewRetail['支付时间']=pd.to_datetime(NewRetail['支付时间'])发现ValueError: day is out of range for month
+#发现10499行：55g奥利奥原味芝士饼干	DD201708167493241554692026752	E43A6E078A04228	4	4	2017/2/29  3:44:00 PM	C	已出货未退款	已提现	非饮料	饼干糕点
+#2017/2/29日期格式不对
+#删去这一行
+#print('\n',NewRetail[10498:10502])#NewRetail.drop(labels =0, axis = 0, inplace = True)
+import numpy as np
+import pandas as pd
+NewRetail=pd.read_csv(r'C:\python\NewRetail\NewRetail.csv', sep = ',',index_col=0,encoding = 'gbk')
+#任务1.1  根据附件1中的数据，提取每台售货机对应的销售数据，保存在CSV文件中
+#文件名分别为“task1-1A.csv”、“task1-1B.csv”、…、“task1-1E.csv”。
+#首先创造一个空csv文件
+task1_1A=NewRetail.loc[NewRetail['地点']=='A', :]
+task1_1B=NewRetail.loc[NewRetail['地点']=='B', :]
+task1_1C=NewRetail.loc[NewRetail['地点']=='C', :]
+task1_1D=NewRetail.loc[NewRetail['地点']=='D', :]
+task1_1E=NewRetail.loc[NewRetail['地点']=='E', :]
+import os
+os.getcwd()#获取当前工作文件路径
+task1_1A.to_csv(r'C:\python\NewRetail\task1-1A.csv',index=True,encoding = 'gbk') #路劲要加r转为普通字符，文件内容有中文要encoding = 'gbk'
+task1_1B.to_csv(r'C:\python\NewRetail\task1-1B.csv',index=True,encoding = 'gbk')
+task1_1C.to_csv(r'C:\python\NewRetail\task1-1C.csv',index=True,encoding = 'gbk')
+task1_1D.to_csv(r'C:\python\NewRetail\task1-1D.csv',index=True,encoding = 'gbk')
+task1_1E.to_csv(r'C:\python\NewRetail\task1-1E.csv',index=True,encoding = 'gbk')
+NewRetail['支付时间']=pd.to_datetime(NewRetail['支付时间'])
+#任务1.1 计算每台售货机2017年5月份的交易额、订单量及所有售货机交易总额和订单总量，以表格形式体现在报告中。
+import numpy as np
+import pandas as pd
+NewRetail=pd.read_csv(r'C:\python\NewRetail\NewRetail.csv', sep = ',',index_col=0,encoding = 'gbk')
+periodIndex= pd.PeriodIndex(NewRetail['支付时间'],freq = 'M')
+month5=NewRetail.loc[periodIndex=='2017-05',:]
+detailGroup= month5.groupby(by = '地点')
+detailGroup1= NewRetail.groupby(by = periodIndex)
+print('每台的交易额为：\n', detailGroup.sum())
+print('每台的订单量为：','\n', detailGroup.size())
+print('所有售货机交易总额:',month5['实际金额'].sum())
+print('每月所有售货机的订单总量:',detailGroup1.size())
+#任务1.2 计算每台售货机每月的每单平均交易额与日均订单量，以表格形式体现在报告中。
+detailGroup2= NewRetail.groupby(by = ['地点',periodIndex])
+print('每台售货机每月的每单平均交易额为：\n', detailGroup2.mean())
+#print('每台的交易额为：\n', detailGroup2.size())
+m=detailGroup2.size()
+m=m.values
+m=m.reshape(5,12)
+d=[31,28,31,30,31,30,31,31,30,31,30,31]
+d=[d,d,d,d,d]
+print('每台售货机每月的日均订单量：\n',m/d)

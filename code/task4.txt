@@ -1,0 +1,377 @@
+#任务业务预测
+#任务4.1?预测未来销售额的原理是什么？
+#是否可以根据附件提供的数据对每台售货机的每个大类商品在2018年1月的交易额进行预测，请阐述原因。
+import numpy as np
+import pandas as pd
+#售货机
+A=pd.read_csv(r'C:\python\NewRetail\task1-1A.csv', sep = ',',index_col=0,encoding = 'gbk')
+#print('\n',A.head())
+A['支付时间']=pd.to_datetime(A['支付时间'])
+A=A.sort_values(by=['支付时间'],ascending=True)
+print('\n',A.head())
+periodIndex= pd.PeriodIndex(A['支付时间'],freq = 'D')
+A['支付时间']=periodIndex
+PivotDetail = pd.pivot_table(A[['支付时间','大类','实际金额']],index ='支付时间',columns ='大类',
+                              aggfunc = np.sum,fill_value = 0, margins = True)
+PivotDetail.to_csv(r'C:\python\NewRetail\task4-1A.csv',index=True,encoding = 'gbk') 
+PivotDetail=pd.read_csv(r'C:\python\NewRetail\task4-1A.csv', sep = ',',header=None,encoding = 'gbk')
+PivotDetail.drop(labels=0,axis=0,inplace=True)
+PivotDetail.drop(labels=1,axis=0,inplace=True)
+PivotDetail.drop(labels=2,axis=0,inplace=True)
+PivotDetail.drop(labels=328,axis=0,inplace=True)
+PivotDetail[4]=np.arange(1,326,1)
+PivotDetail
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+y=PivotDetail[1].values
+X=PivotDetail[4].values
+X=X.reshape(-1,1)
+y=y.reshape(-1,1)
+## 将数据划分为训练集测试集
+X_train, X_test, y_train, y_test = train_test_split(X,y,test_size = 0.2,random_state=125)
+## 建立线性回归模型
+clf = LinearRegression().fit(X_train,y_train)
+print('建立的LinearRegression模型为：','\n',clf)
+
+## 预测训练集结果
+y_pred = clf.predict(X_test)
+print('预测前31个结果为：','\n',y_pred[:31])
+from sklearn.metrics import explained_variance_score,\
+mean_absolute_error,\
+mean_squared_error,\
+median_absolute_error,r2_score
+print('非饮料数据线性回归模型的平均绝对误差为：',
+     mean_absolute_error(y_test,y_pred))
+print('非饮料数据线性回归模型的均方误差为：',
+     mean_squared_error(y_test,y_pred))
+print('非饮料数据线性回归模型的中值绝对误差为：',
+     median_absolute_error(y_test,y_pred))
+print('非饮料数据线性回归模型的可解释方差值为：',
+     explained_variance_score(y_test,y_pred))
+print('非饮料数据线性回归模型的R方值为：',
+     r2_score(y_test,y_pred))
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+y=PivotDetail[2].values
+X=PivotDetail[4].values
+X=X.reshape(-1,1)
+y=y.reshape(-1,1)
+## 将数据划分为训练集测试集
+X_train, X_test, y_train, y_test = train_test_split(X,y,test_size = 0.2,random_state=125)
+## 建立线性回归模型
+clf = LinearRegression().fit(X_train,y_train)
+print('建立的LinearRegression模型为：','\n',clf)
+
+## 预测训练集结果
+y_pred = clf.predict(X_test)
+print('预测前31个结果为：','\n',y_pred[:31])
+from sklearn.metrics import explained_variance_score,\
+mean_absolute_error,\
+mean_squared_error,\
+median_absolute_error,r2_score
+print('饮料数据线性回归模型的平均绝对误差为：',
+     mean_absolute_error(y_test,y_pred))
+print('饮料数据线性回归模型的均方误差为：',
+     mean_squared_error(y_test,y_pred))
+print('饮料数据线性回归模型的中值绝对误差为：',
+     median_absolute_error(y_test,y_pred))
+print('饮料数据线性回归模型的可解释方差值为：',
+     explained_variance_score(y_test,y_pred))
+print('饮料数据线性回归模型的R方值为：',
+     r2_score(y_test,y_pred))
+#售货机B
+B=pd.read_csv(r'C:\python\NewRetail\task1-1B.csv', sep = ',',index_col=0,encoding = 'gbk')
+#print('\n',A.head())
+B['支付时间']=pd.to_datetime(B['支付时间'])
+B=B.sort_values(by=['支付时间'],ascending=True)
+periodIndex= pd.PeriodIndex(B['支付时间'],freq = 'D')
+B['支付时间']=periodIndex
+PivotDetail = pd.pivot_table(B[['支付时间','大类','实际金额']],index ='支付时间',columns ='大类',
+                              aggfunc = np.sum,fill_value = 0, margins = True)
+PivotDetail.to_csv(r'C:\python\NewRetail\task4-1B.csv',index=True,encoding = 'gbk') 
+PivotDetail=pd.read_csv(r'C:\python\NewRetail\task4-1B.csv', sep = ',',header=None,encoding = 'gbk')
+PivotDetail
+PivotDetail.drop(labels=0,axis=0,inplace=True)
+PivotDetail.drop(labels=1,axis=0,inplace=True)
+PivotDetail.drop(labels=2,axis=0,inplace=True)
+PivotDetail.drop(labels=327,axis=0,inplace=True)
+PivotDetail[4]=np.arange(1,325,1)
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+y=PivotDetail[1].values
+X=PivotDetail[4].values
+X=X.reshape(-1,1)
+y=y.reshape(-1,1)
+## 将数据划分为训练集测试集
+X_train, X_test, y_train, y_test = train_test_split(X,y,test_size = 0.2,random_state=125)
+## 建立线性回归模型
+clf = LinearRegression().fit(X_train,y_train)
+print('建立的LinearRegression模型为：','\n',clf)
+
+## 预测训练集结果
+y_pred = clf.predict(X_test)
+print('预测前31个结果为：','\n',y_pred[:31])
+from sklearn.metrics import explained_variance_score,\
+mean_absolute_error,\
+mean_squared_error,\
+median_absolute_error,r2_score
+print('非饮料数据线性回归模型的平均绝对误差为：',
+     mean_absolute_error(y_test,y_pred))
+print('非饮料数据线性回归模型的均方误差为：',
+     mean_squared_error(y_test,y_pred))
+print('非饮料数据线性回归模型的中值绝对误差为：',
+     median_absolute_error(y_test,y_pred))
+print('非饮料数据线性回归模型的可解释方差值为：',
+     explained_variance_score(y_test,y_pred))
+print('非饮料数据线性回归模型的R方值为：',
+     r2_score(y_test,y_pred))
+
+y2=PivotDetail[2].values
+X2=PivotDetail[4].values
+X2=X2.reshape(-1,1)
+y2=y2.reshape(-1,1)
+## 将数据划分为训练集测试集
+X2_train, X2_test, y2_train, y2_test = train_test_split(X2,y2,test_size = 0.2,random_state=125)
+## 建立线性回归模型
+clf = LinearRegression().fit(X2_train,y2_train)
+print('建立的LinearRegression模型为：','\n',clf)
+
+## 预测训练集结果
+y2_pred = clf.predict(X2_test)
+print('预测前31个结果为：','\n',y2_pred[:31])
+from sklearn.metrics import explained_variance_score,\
+mean_absolute_error,\
+mean_squared_error,\
+median_absolute_error,r2_score
+print('饮料数据线性回归模型的平均绝对误差为：',
+     mean_absolute_error(y2_test,y2_pred))
+print('饮料数据线性回归模型的均方误差为：',
+     mean_squared_error(y2_test,y2_pred))
+print('饮料数据线性回归模型的中值绝对误差为：',
+     median_absolute_error(y2_test,y2_pred))
+print('饮料数据线性回归模型的可解释方差值为：',
+     explained_variance_score(y2_test,y2_pred))
+print('饮料数据线性回归模型的R方值为：',
+     r2_score(y2_test,y2_pred))
+#售货机C
+C=pd.read_csv(r'C:\python\NewRetail\task1-1C.csv', sep = ',',index_col=0,encoding = 'gbk')
+#print('\n',A.head())
+C['支付时间']=pd.to_datetime(C['支付时间'])
+C=C.sort_values(by=['支付时间'],ascending=True)
+periodIndex= pd.PeriodIndex(C['支付时间'],freq = 'D')
+C['支付时间']=periodIndex
+PivotDetail = pd.pivot_table(C[['支付时间','大类','实际金额']],index ='支付时间',columns ='大类',
+                              aggfunc = np.sum,fill_value = 0, margins = True)
+PivotDetail.to_csv(r'C:\python\NewRetail\task4-1C.csv',index=True,encoding = 'gbk') 
+PivotDetail=pd.read_csv(r'C:\python\NewRetail\task4-1C.csv', sep = ',',header=None,encoding = 'gbk')
+PivotDetail
+PivotDetail.drop(labels=0,axis=0,inplace=True)
+PivotDetail.drop(labels=1,axis=0,inplace=True)
+PivotDetail.drop(labels=2,axis=0,inplace=True)
+PivotDetail.drop(labels=332,axis=0,inplace=True)
+PivotDetail[4]=np.arange(1,330,1)
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+y=PivotDetail[1].values
+X=PivotDetail[4].values
+X=X.reshape(-1,1)
+y=y.reshape(-1,1)
+## 将数据划分为训练集测试集
+X_train, X_test, y_train, y_test = train_test_split(X,y,test_size = 0.2,random_state=125)
+## 建立线性回归模型
+clf = LinearRegression().fit(X_train,y_train)
+print('建立的LinearRegression模型为：','\n',clf)
+
+## 预测训练集结果
+y_pred = clf.predict(X_test)
+print('预测前31个结果为：','\n',y_pred[:31])
+from sklearn.metrics import explained_variance_score,\
+mean_absolute_error,\
+mean_squared_error,\
+median_absolute_error,r2_score
+print('非饮料数据线性回归模型的平均绝对误差为：',
+     mean_absolute_error(y_test,y_pred))
+print('非饮料数据线性回归模型的均方误差为：',
+     mean_squared_error(y_test,y_pred))
+print('非饮料数据线性回归模型的中值绝对误差为：',
+     median_absolute_error(y_test,y_pred))
+print('非饮料数据线性回归模型的可解释方差值为：',
+     explained_variance_score(y_test,y_pred))
+print('非饮料数据线性回归模型的R方值为：',
+     r2_score(y_test,y_pred))
+
+y2=PivotDetail[2].values
+X2=PivotDetail[4].values
+X2=X2.reshape(-1,1)
+y2=y2.reshape(-1,1)
+## 将数据划分为训练集测试集
+X2_train, X2_test, y2_train, y2_test = train_test_split(X2,y2,test_size = 0.2,random_state=125)
+## 建立线性回归模型
+clf = LinearRegression().fit(X2_train,y2_train)
+print('建立的LinearRegression模型为：','\n',clf)
+
+## 预测训练集结果
+y2_pred = clf.predict(X2_test)
+print('预测前31个结果为：','\n',y2_pred[:31])
+from sklearn.metrics import explained_variance_score,\
+mean_absolute_error,\
+mean_squared_error,\
+median_absolute_error,r2_score
+print('饮料数据线性回归模型的平均绝对误差为：',
+     mean_absolute_error(y2_test,y2_pred))
+print('饮料数据线性回归模型的均方误差为：',
+     mean_squared_error(y2_test,y2_pred))
+print('饮料数据线性回归模型的中值绝对误差为：',
+     median_absolute_error(y2_test,y2_pred))
+print('饮料数据线性回归模型的可解释方差值为：',
+     explained_variance_score(y2_test,y2_pred))
+print('饮料数据线性回归模型的R方值为：',
+     r2_score(y2_test,y2_pred))
+#售货机D
+D=pd.read_csv(r'C:\python\NewRetail\task1-1D.csv', sep = ',',index_col=0,encoding = 'gbk')
+#print('\n',A.head())
+D['支付时间']=pd.to_datetime(D['支付时间'])
+D=D.sort_values(by=['支付时间'],ascending=True)
+periodIndex= pd.PeriodIndex(D['支付时间'],freq = 'D')
+D['支付时间']=periodIndex
+PivotDetail = pd.pivot_table(D[['支付时间','大类','实际金额']],index ='支付时间',columns ='大类',
+                              aggfunc = np.sum,fill_value = 0, margins = True)
+PivotDetail.to_csv(r'C:\python\NewRetail\task4-1D.csv',index=True,encoding = 'gbk') 
+PivotDetail=pd.read_csv(r'C:\python\NewRetail\task4-1D.csv', sep = ',',header=None,encoding = 'gbk')
+PivotDetail
+PivotDetail.drop(labels=0,axis=0,inplace=True)
+PivotDetail.drop(labels=1,axis=0,inplace=True)
+PivotDetail.drop(labels=2,axis=0,inplace=True)
+PivotDetail.drop(labels=324,axis=0,inplace=True)
+PivotDetail[4]=np.arange(1,322,1)
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+y=PivotDetail[1].values
+X=PivotDetail[4].values
+X=X.reshape(-1,1)
+y=y.reshape(-1,1)
+## 将数据划分为训练集测试集
+X_train, X_test, y_train, y_test = train_test_split(X,y,test_size = 0.2,random_state=125)
+## 建立线性回归模型
+clf = LinearRegression().fit(X_train,y_train)
+print('建立的LinearRegression模型为：','\n',clf)
+
+## 预测训练集结果
+y_pred = clf.predict(X_test)
+print('预测前31个结果为：','\n',y_pred[:31])
+from sklearn.metrics import explained_variance_score,\
+mean_absolute_error,\
+mean_squared_error,\
+median_absolute_error,r2_score
+print('非饮料数据线性回归模型的平均绝对误差为：',
+     mean_absolute_error(y_test,y_pred))
+print('非饮料数据线性回归模型的均方误差为：',
+     mean_squared_error(y_test,y_pred))
+print('非饮料数据线性回归模型的中值绝对误差为：',
+     median_absolute_error(y_test,y_pred))
+print('非饮料数据线性回归模型的可解释方差值为：',
+     explained_variance_score(y_test,y_pred))
+print('非饮料数据线性回归模型的R方值为：',
+     r2_score(y_test,y_pred))
+
+y2=PivotDetail[2].values
+X2=PivotDetail[4].values
+X2=X2.reshape(-1,1)
+y2=y2.reshape(-1,1)
+## 将数据划分为训练集测试集
+X2_train, X2_test, y2_train, y2_test = train_test_split(X2,y2,test_size = 0.2,random_state=125)
+## 建立线性回归模型
+clf = LinearRegression().fit(X2_train,y2_train)
+print('建立的LinearRegression模型为：','\n',clf)
+
+## 预测训练集结果
+y2_pred = clf.predict(X2_test)
+print('预测前31个结果为：','\n',y2_pred[:31])
+from sklearn.metrics import explained_variance_score,\
+mean_absolute_error,\
+mean_squared_error,\
+median_absolute_error,r2_score
+print('饮料数据线性回归模型的平均绝对误差为：',
+     mean_absolute_error(y2_test,y2_pred))
+print('饮料数据线性回归模型的均方误差为：',
+     mean_squared_error(y2_test,y2_pred))
+print('饮料数据线性回归模型的中值绝对误差为：',
+     median_absolute_error(y2_test,y2_pred))
+print('饮料数据线性回归模型的可解释方差值为：',
+     explained_variance_score(y2_test,y2_pred))
+print('饮料数据线性回归模型的R方值为：',
+     r2_score(y2_test,y2_pred))
+#售货机E
+E=pd.read_csv(r'C:\python\NewRetail\task1-1E.csv', sep = ',',index_col=0,encoding = 'gbk')
+#print('\n',A.head())
+E['支付时间']=pd.to_datetime(E['支付时间'])
+E=E.sort_values(by=['支付时间'],ascending=True)
+periodIndex= pd.PeriodIndex(E['支付时间'],freq = 'D')
+E['支付时间']=periodIndex
+PivotDetail = pd.pivot_table(E[['支付时间','大类','实际金额']],index ='支付时间',columns ='大类',
+                              aggfunc = np.sum,fill_value = 0, margins = True)
+PivotDetail.to_csv(r'C:\python\NewRetail\task4-1E.csv',index=True,encoding = 'gbk') 
+PivotDetail=pd.read_csv(r'C:\python\NewRetail\task4-1E.csv', sep = ',',header=None,encoding = 'gbk')
+PivotDetail
+PivotDetail.drop(labels=0,axis=0,inplace=True)
+PivotDetail.drop(labels=1,axis=0,inplace=True)
+PivotDetail.drop(labels=2,axis=0,inplace=True)
+PivotDetail.drop(labels=336,axis=0,inplace=True)
+PivotDetail[4]=np.arange(1,334,1)
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+y=PivotDetail[1].values
+X=PivotDetail[4].values
+X=X.reshape(-1,1)
+y=y.reshape(-1,1)
+## 将数据划分为训练集测试集
+X_train, X_test, y_train, y_test = train_test_split(X,y,test_size = 0.2,random_state=125)
+## 建立线性回归模型
+clf = LinearRegression().fit(X_train,y_train)
+print('建立的LinearRegression模型为：','\n',clf)
+
+## 预测训练集结果
+y_pred = clf.predict(X_test)
+print('预测前31个结果为：','\n',y_pred[:31])
+from sklearn.metrics import explained_variance_score,\
+mean_absolute_error,\
+mean_squared_error,\
+median_absolute_error,r2_score
+print('非饮料数据线性回归模型的平均绝对误差为：',
+     mean_absolute_error(y_test,y_pred))
+print('非饮料数据线性回归模型的均方误差为：',
+     mean_squared_error(y_test,y_pred))
+print('非饮料数据线性回归模型的中值绝对误差为：',
+     median_absolute_error(y_test,y_pred))
+print('非饮料数据线性回归模型的可解释方差值为：',
+     explained_variance_score(y_test,y_pred))
+print('非饮料数据线性回归模型的R方值为：',
+     r2_score(y_test,y_pred))
+
+y2=PivotDetail[2].values
+X2=PivotDetail[4].values
+X2=X2.reshape(-1,1)
+y2=y2.reshape(-1,1)
+## 将数据划分为训练集测试集
+X2_train, X2_test, y2_train, y2_test = train_test_split(X2,y2,test_size = 0.2,random_state=125)
+## 建立线性回归模型
+clf = LinearRegression().fit(X2_train,y2_train)
+print('建立的LinearRegression模型为：','\n',clf)
+
+## 预测训练集结果
+y2_pred = clf.predict(X2_test)
+print('预测前31个结果为：','\n',y2_pred[:31])
+from sklearn.metrics import explained_variance_score,\
+mean_absolute_error,\
+mean_squared_error,\
+median_absolute_error,r2_score
+print('饮料数据线性回归模型的平均绝对误差为：',
+     mean_absolute_error(y2_test,y2_pred))
+print('饮料数据线性回归模型的均方误差为：',
+     mean_squared_error(y2_test,y2_pred))
+print('饮料数据线性回归模型的中值绝对误差为：',
+     median_absolute_error(y2_test,y2_pred))
+print('饮料数据线性回归模型的可解释方差值为：',
+     explained_variance_score(y2_test,y2_pred))
+print('饮料数据线性回归模型的R方值为：',
+     r2_score(y2_test,y2_pred))

@@ -1,0 +1,202 @@
+#任务3.1  分析各售货机商品销售数据，总结规律，给出每台售货机饮料??类商品的标签，结果保存在CSV文件中，文件名分别为 “task3-1A.csv”、“task3-1B.csv”、…、“task3-1E.csv”，格式如下表所示。
+import numpy as np
+import pandas as pd
+from os import path
+from PIL import Image
+import numpy as np
+import matplotlib.pyplot as plt
+
+task1_1A=pd.read_csv(r'C:\python\NewRetail\task1-1A.csv', sep = ',',index_col=0,encoding = 'gbk')
+yinliao=task1_1A.loc[task1_1A['大类']=='饮料',:]
+detailGroup=yinliao.groupby(by = '商品')
+task3_1A=detailGroup.size()
+task3_1A.to_csv(r'C:\python\NewRetail\task3-1A.csv',index=True,encoding = 'gbk')
+task3_1A=pd.read_csv(r'C:\python\NewRetail\task3-1A.csv', sep = ',',header=None,encoding = 'gbk')
+#print('\n',task3_1A)
+task3_1A['序号']=np.arange(1,113,1)
+task3_1A['商品']=task3_1A[0]
+task3_1A['销量']=task3_1A[1]
+task3_1A.drop(labels=0,axis=1,inplace=True)
+task3_1A.drop(labels=1,axis=1,inplace=True)
+print('销量最大和最小为：\n',[task3_1A['销量'].max(),task3_1A['销量'].min()])
+
+task1_1B=pd.read_csv(r'C:\python\NewRetail\task1-1B.csv', sep = ',',index_col=0,encoding = 'gbk')
+yinliao=task1_1B.loc[task1_1B['大类']=='饮料',:]
+detailGroup=yinliao.groupby(by = '商品')
+task3_1B=detailGroup.size()
+task3_1B.to_csv(r'C:\python\NewRetail\task3-1B.csv',index=True,encoding = 'gbk')
+task3_1B=pd.read_csv(r'C:\python\NewRetail\task3-1B.csv', sep = ',',header=None,encoding = 'gbk')
+#print('\n',task3_1B)
+task3_1B['序号']=np.arange(1,116,1)
+task3_1B['商品']=task3_1B[0]
+task3_1B['销量']=task3_1B[1]
+task3_1B.drop(labels=0,axis=1,inplace=True)
+task3_1B.drop(labels=1,axis=1,inplace=True)
+print('销量最大和最小为：\n',[task3_1B['销量'].max(),task3_1B['销量'].min()])
+
+task1_1C=pd.read_csv(r'C:\python\NewRetail\task1-1C.csv', sep = ',',index_col=0,encoding = 'gbk')
+yinliao=task1_1C.loc[task1_1C['大类']=='饮料',:]
+detailGroup=yinliao.groupby(by = '商品')
+task3_1C=detailGroup.size()
+task3_1C.to_csv(r'C:\python\NewRetail\task3-1C.csv',index=True,encoding = 'gbk')
+task3_1C=pd.read_csv(r'C:\python\NewRetail\task3-1C.csv', sep = ',',header=None,encoding = 'gbk')
+#print('\n',task3_1C)
+task3_1C['序号']=np.arange(1,115,1)
+task3_1C['商品']=task3_1C[0]
+task3_1C['销量']=task3_1C[1]
+task3_1C.drop(labels=0,axis=1,inplace=True)
+task3_1C.drop(labels=1,axis=1,inplace=True)
+print('销量最大和最小为：\n',[task3_1C['销量'].max(),task3_1C['销量'].min()])
+
+task1_1D=pd.read_csv(r'C:\python\NewRetail\task1-1D.csv', sep = ',',index_col=0,encoding = 'gbk')
+yinliao=task1_1D.loc[task1_1D['大类']=='饮料',:]
+detailGroup=yinliao.groupby(by = '商品')
+task3_1D=detailGroup.size()
+task3_1D.to_csv(r'C:\python\NewRetail\task3-1D.csv',index=True,encoding = 'gbk')
+task3_1D=pd.read_csv(r'C:\python\NewRetail\task3-1D.csv', sep = ',',header=None,encoding = 'gbk')
+#print('\n',task3_1D)
+task3_1D['序号']=np.arange(1,106,1)
+task3_1D['商品']=task3_1D[0]
+task3_1D['销量']=task3_1D[1]
+task3_1D.drop(labels=0,axis=1,inplace=True)
+task3_1D.drop(labels=1,axis=1,inplace=True)
+print('销量最大和最小为：\n',[task3_1D['销量'].max(),task3_1D['销量'].min()])
+
+task1_1E=pd.read_csv(r'C:\python\NewRetail\task1-1E.csv', sep = ',',index_col=0,encoding = 'gbk')
+yinliao=task1_1E.loc[task1_1E['大类']=='饮料',:]
+detailGroup=yinliao.groupby(by = '商品')
+task3_1E=detailGroup.size()
+task3_1E.to_csv(r'C:\python\NewRetail\task3-1D.csv',index=True,encoding = 'gbk')
+task3_1E=pd.read_csv(r'C:\python\NewRetail\task3-1D.csv', sep = ',',header=None,encoding = 'gbk')
+#print('\n',task3_1E)
+task3_1E['序号']=np.arange(1,114,1)
+task3_1E['商品']=task3_1E[0]
+task3_1E['销量']=task3_1E[1]
+task3_1E.drop(labels=0,axis=1,inplace=True)
+task3_1E.drop(labels=1,axis=1,inplace=True)
+print('销量最大和最小为：\n',[task3_1E['销量'].max(),task3_1E['销量'].min()])
+#售货机A
+s1=531/3
+s2=2*s1
+n=task3_1A['销量'].values
+for i in range(len(task3_1A)):
+    if  n[i]<s1:
+        task3_1A.loc[i,'标签']='滞销'
+        
+    if n[i]>=s1 and n[i]<354:
+         task3_1A.loc[i,'标签']='正常'
+    if n[i]>=s2:
+        task3_1A.loc[i,'标签']='热销'
+task3_1A.to_csv(r'C:\python\NewRetail\task3-1A.csv',index=True,encoding = 'gbk')
+df=pd.read_csv(r'C:\python\NewRetail\附件2.csv', sep = ',',index_col=0,encoding = 'gbk')
+task3_1A=pd.read_csv(r'C:\python\NewRetail\task3-1A.csv',index_col=0,encoding = 'gbk')
+task3_1A1 = pd.merge(task3_1A,df,on='商品')
+task3_1A['二级类']=task3_1A1['二级类']
+#print('\n',task3_1A.head())
+task3_1A.to_csv(r'C:\python\NewRetail\task3-1A.csv',index=True,encoding = 'gbk')
+CSV = open(path.join(d,r'C:\python\NewRetail\task3-1A.csv')).read()
+wc = WordCloud( font_path=r'C:\\windows\\Fonts\\simhei.ttf', mode='RGBA', background_color=None,max_words = 50).generate(CSV)
+plt.imshow(wc, interpolation='bilinear')
+plt.axis("off")
+plt.show()
+wc.to_file(r'C:\python\NewRetail\售货机A.png')
+#售货机B
+s1=1432/3
+s2=2*s1
+n=task3_1B['销量'].values
+for i in range(len(task3_1B)):
+    if  n[i]<s1:
+        task3_1B.loc[i,'标签']='滞销'
+        
+    if n[i]>=s1 and n[i]<354:
+         task3_1B.loc[i,'标签']='正常'
+    if n[i]>=s2:
+        task3_1B.loc[i,'标签']='热销'
+task3_1B.to_csv(r'C:\python\NewRetail\task3-1B.csv',index=True,encoding = 'gbk')
+df=pd.read_csv(r'C:\python\NewRetail\附件2.csv', sep = ',',index_col=0,encoding = 'gbk')
+task3_1B=pd.read_csv(r'C:\python\NewRetail\task3-1B.csv',index_col=0,encoding = 'gbk')
+task3_1B1 = pd.merge(task3_1B,df,on='商品')
+task3_1B['二级类']=task3_1B1['二级类']
+#print('\n',task3_1A.head())
+task3_1B.to_csv(r'C:\python\NewRetail\task3-1B.csv',index=True,encoding = 'gbk')
+CSV = open(path.join(d,r'C:\python\NewRetail\task3-1B.csv')).read()
+wc = WordCloud( font_path=r'C:\\windows\\Fonts\\simhei.ttf', mode='RGBA', background_color=None,max_words = 50).generate(CSV)
+plt.imshow(wc, interpolation='bilinear')
+plt.axis("off")
+plt.show()
+wc.to_file(r'C:\python\NewRetail\售货机B.png')
+#售货机C
+s1=999/3
+s2=2*s1
+n=task3_1C['销量'].values
+for i in range(len(task3_1C)):
+    if  n[i]<s1:
+        task3_1C.loc[i,'标签']='滞销'
+        
+    if n[i]>=s1 and n[i]<354:
+         task3_1C.loc[i,'标签']='正常'
+    if n[i]>=s2:
+        task3_1C.loc[i,'标签']='热销'
+task3_1C.to_csv(r'C:\python\NewRetail\task3-1C.csv',index=True,encoding = 'gbk')
+df=pd.read_csv(r'C:\python\NewRetail\附件2.csv', sep = ',',index_col=0,encoding = 'gbk')
+task3_1C=pd.read_csv(r'C:\python\NewRetail\task3-1C.csv',index_col=0,encoding = 'gbk')
+task3_1C1 = pd.merge(task3_1C,df,on='商品')
+task3_1C['二级类']=task3_1C1['二级类']
+#print('\n',task3_1A.head())
+task3_1C.to_csv(r'C:\python\NewRetail\task3-1C.csv',index=True,encoding = 'gbk')
+text = open(path.join(d,r'C:\python\NewRetail\task3-1C.csv')).read()
+wc = WordCloud( font_path=r'C:\\windows\\Fonts\\simhei.ttf', mode='RGBA', background_color=None,max_words = 50).generate(text)
+plt.imshow(wc, interpolation='bilinear')
+plt.axis("off")
+plt.show()
+wc.to_file(r'C:\python\NewRetail\售货机C.png')
+#售货机D
+s1=441/3
+s2=2*s1
+n=task3_1D['销量'].values
+for i in range(len(task3_1D)):
+    if  n[i]<s1:
+        task3_1D.loc[i,'标签']='滞销'
+        
+    if n[i]>=s1 and n[i]<354:
+         task3_1D.loc[i,'标签']='正常'
+    if n[i]>=s2:
+        task3_1D.loc[i,'标签']='热销'
+task3_1D.to_csv(r'C:\python\NewRetail\task3-1D.csv',index=True,encoding = 'gbk')
+df=pd.read_csv(r'C:\python\NewRetail\附件2.csv', sep = ',',index_col=0,encoding = 'gbk')
+task3_1D=pd.read_csv(r'C:\python\NewRetail\task3-1D.csv',index_col=0,encoding = 'gbk')
+task3_1D1 = pd.merge(task3_1D,df,on='商品')
+task3_1D['二级类']=task3_1D1['二级类']
+#print('\n',task3_1A.head())
+task3_1D.to_csv(r'C:\python\NewRetail\task3-1D.csv',index=True,encoding = 'gbk')
+CSV = open(path.join(d,r'C:\python\NewRetail\task3-1D.csv')).read()
+wc = WordCloud( font_path=r'C:\\windows\\Fonts\\simhei.ttf', mode='RGBA', background_color=None,max_words = 50).generate(CSV)
+plt.imshow(wc, interpolation='bilinear')
+plt.axis("off")
+plt.show()
+wc.to_file(r'C:\python\NewRetail\售货机D.png')
+#售货机E
+s1=1705/3
+s2=2*s1
+n=task3_1E['销量'].values
+for i in range(len(task3_1E)):
+    if  n[i]<s1:
+        task3_1E.loc[i,'标签']='滞销'
+        
+    if n[i]>=s1 and n[i]<354:
+         task3_1E.loc[i,'标签']='正常'
+    if n[i]>=s2:
+        task3_1E.loc[i,'标签']='热销'
+task3_1E.to_csv(r'C:\python\NewRetail\task3-1E.csv',index=True,encoding = 'gbk')
+df=pd.read_csv(r'C:\python\NewRetail\附件2.csv', sep = ',',index_col=0,encoding = 'gbk')
+task3_1E=pd.read_csv(r'C:\python\NewRetail\task3-1E.csv',index_col=0,encoding = 'gbk')
+task3_1E1 = pd.merge(task3_1E,df,on='商品')
+task3_1E['二级类']=task3_1E1['二级类']
+#print('\n',task3_1A.head())
+task3_1E.to_csv(r'C:\python\NewRetail\task3-1E.csv',index=True,encoding = 'gbk')
+CSV = open(path.join(d,r'C:\python\NewRetail\task3-1E.csv')).read()
+wc = WordCloud( font_path=r'C:\\windows\\Fonts\\simhei.ttf', mode='RGBA', background_color=None,max_words = 50).generate(CSV)
+plt.imshow(wc, interpolation='bilinear')
+plt.axis("off")
+plt.show()
+wc.to_file(r'C:\python\NewRetail\售货机E.png')
